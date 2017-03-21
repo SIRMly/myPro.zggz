@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>诸葛古镇《出师表》</title>
+    <link rel="stylesheet" type="text/css" href="http://fun-x.b0.upaiyun.com/zggz/css/style.css">
+    <link rel="stylesheet" href="http://fun-x.b0.upaiyun.com/zggz/css/page4.css">
+    <style type="text/css">
+        .hide {
+            display: none;
+        }
+
+        .page-index .banner {
+            display: none !important;
+        }
+
+        #icon-tips {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+<section class="page-index logic-page" id="page-index">
+    <div class="canvas-wrap" id="canvas-wrap">
+    </div>
+    <div class="index-wrap" id="index-wrap">
+        <div class="cover" id="index-cover">
+            <div class="h1_box"><h1>诸葛古镇</h1></div>
+            <div class="btn-wrap">
+                <a href="javascript:void(0)" id="index-go"><i></i></a>
+                点击进入
+            </div>
+        </div>
+        <div class="banner">
+            <div id="index-banner"></div>
+        </div>
+        <p>Power by 拾壹数字</p>
+    </div>
+
+    <div class="constellation-wrap" id="constellation-wrap">滑动星空</div>
+
+    <div class="star-wrap" id="star-wrap">
+        <div class="icon-tips slider" id="icon-tips">
+            <i></i>
+        </div>
+        <h3 class="star-tag" id="star-tag"></h3>
+        <a href="javascript:void(0)" id="star-back" class="star-back"><span>返回</span></a>
+        <a href="javascript:void(0)" id="confirm-btn" class="confirm-btn">探索剧情</a>
+    </div>
+
+</section>
+<script type="x-shader/x-vertex" id="star-vshader">
+    attribute float size;
+    attribute float idx;
+    attribute float matid;
+
+    uniform float timeline;
+
+    varying vec4 vColor;
+    varying float vMatid;
+
+    void main() {
+        vec3 color = vec3(1.0,1.0,1.0);
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+
+        float alpha = 1.0;
+        float enlarge = .0;
+
+        if(length(mvPosition.xyz) < 400.0) {
+            enlarge = (sin(timeline - idx) * 40.0);
+        } else {
+            enlarge = (sin(timeline - idx) * 10.0);
+        }
+
+
+        if(enlarge < 0.1) {
+            enlarge = .0 - enlarge + 1.0;
+        }
+
+        vColor = vec4(color, alpha);
+        vMatid = matid;
+
+        gl_Position = projectionMatrix * mvPosition;
+        gl_PointSize = 1500.0 / length(mvPosition.xyz) * size + enlarge;
+
+    }
+
+</script>
+<script type="x-shader/x-fragment" id="star-fshader">
+    uniform sampler2D texture1;
+    uniform sampler2D texture2;
+    uniform sampler2D texture3;
+    uniform sampler2D texture4;
+    varying vec4 vColor;
+    varying float vMatid;
+
+    void main() {
+        if(vMatid > 3.5) {
+            gl_FragColor = vColor * texture2D(texture4, gl_PointCoord) ;
+        } else if(vMatid > 2.5) {
+            gl_FragColor = vColor * texture2D(texture3, gl_PointCoord) ;
+        } else if(vMatid > 1.5) {
+            gl_FragColor = vColor * texture2D(texture2, gl_PointCoord) ;
+        } else {
+            gl_FragColor = vColor * texture2D(texture1, gl_PointCoord) ;
+        }
+    }
+
+</script>
+<section class="page-result logic-page">
+    <div class="result-wrapper hide">
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page1_bgm.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <div class="page1_bg">
+            <div class="star1"></div>
+            <div class="star2"></div>
+            <div class="star3"></div>
+            <div class="star4"></div>
+            <div class="star5"></div>
+            <div class="star6"></div>
+            <div class="star7"></div>
+            <div class="star8"></div>
+            <div class="star9"></div>
+            <div class="page1_person"></div>
+        </div>
+        <div class="page1_board_a board_1"></div>
+        <div class="board_b board_2">
+            <span><a href="javascript:;" class="playagain-btn"></a></span>
+            <span><a href="javascript:;" class="toBuy-btn"></a></span>
+        </div>
+        <div class="marquee"></div>
+    </div>
+    </div>
+    <div class="result-wrapper hide">
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page2_bgm.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page2_bgm2.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page2_arrow.mp3" preload="auto" id="music-arrow"></audio>
+        <div class="page2_bg">
+            <div class="page2_soldier_topLeft">
+                <div class="page2_soldier_topLeft_flag"></div>
+            </div>
+            <div class="page2_soldier_bottomLeft"></div>
+            <div class="page2_soldier_topRight">
+                <div class="page2_soldier_topLeft_flag"></div>
+            </div>
+            <div class="page2_soldier_bottomRight"></div>
+            <div class="arrow1"></div>
+            <div class="arrow2"></div>
+            <div class="arrow3"></div>
+        </div>
+        <div class="page2_board_a board_1"></div>
+        <div class="board_b board_2">
+            <span><a href="javascript:;" class="playagain-btn"></a></span>
+            <span><a href="javascript:;" class="toBuy-btn"></a></span>
+        </div>
+        <div class="marquee"></div>
+    </div>
+    <div class="result-wrapper hide">
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page3_bgm.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <div class="page3_bg">
+            <div class="cloth_left "></div>
+            <div class="page3_flag">
+                <div class="main_flag"></div>
+            </div>
+            <div class="page3_light"></div>
+            <div class="page3_boat"></div>
+        </div>
+        <div class="page3_board_a board_1"></div>
+        <div class="board_b board_2">
+            <span><a href="javascript:;" class="playagain-btn"></a></span>
+            <span><a href="javascript:;" class="toBuy-btn"></a></span>
+        </div>
+        <div class="marquee"></div>
+    </div>
+    <div class="result-wrapper hide">
+        <div class="page4_bg">
+            <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page4_bgm.mp3" preload="auto" loop="loop"
+                   class="music-bg"></audio>
+            <div class="cloud_1">
+                <div class="cloud_2">
+                    <div class="cloud_3"></div>
+                </div>
+            </div>
+            <div class="page4_person">
+                <div class="page4_soldier"></div>
+            </div>
+            <div class="shuiche_1"></div>
+            <div class="shuiche_2"></div>
+        </div>
+        <div class="page4_board_a board_1"></div>
+        <div class="page4_board_b board_2">
+            <span><a href="javascript:;" class="playagain-btn"></a></span>
+            <span><a href="javascript:;" class="toBuy-btn"></a></span>
+        </div>
+        <div class="marquee"></div>
+    </div>
+    <div class="result-wrapper hide">
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page5_bgm.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <div class="page5_bg">
+            <div class="page5_person">
+                <div class="page5_light"></div>
+            </div>
+            <div class="page5_z">
+                <div class="page5_z1"></div>
+                <div class="page5_z2"></div>
+                <div class="page5_z3"></div>
+                <div class="page5_z4"></div>
+                <div class="page5_z5"></div>
+                <div class="page5_pic"></div>
+            </div>
+        </div>
+        <div class="page5_board_a board_1"></div>
+        <div class="board_b board_2">
+            <span><a href="javascript:;" class="playagain-btn"></a></span>
+            <span><a href="javascript:;" class="toBuy-btn"></a></span>
+        </div>
+        <div class="marquee"></div>
+    </div>
+    <div class="result-wrapper hide">
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page6_bgm.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page6_bgm2.mp3" preload="auto" id="music_page6_bmg2"></audio>
+        <div class="page6_bg">
+            <div class="page6_flag"></div>
+            <div class="page6_person"></div>
+        </div>
+        <div class="page6_board_a board_1"></div>
+        <div class="board_b board_2">
+            <span><a href="javascript:;" class="playagain-btn"></a></span>
+            <span><a href="javascript:;" class="toBuy-btn"></a></span>
+        </div>
+        <div class="marquee"></div>
+    </div>
+    <div class="result-wrapper hide">
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page7_bgm.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <!-- <audio src="music/page7_bgm2.mp3" preload="auto" loop="loop"  class="music-bg"></audio> -->
+        <div class="page7_bg">
+            <div class="page7_gear"></div>
+            <div class="chain"></div>
+        </div>
+        <div class="page7_board_a board_1"></div>
+        <div class="board_b board_2">
+            <span><a href="javascript:;" class="playagain-btn"></a></span>
+            <span><a href="javascript:;" class="toBuy-btn"></a></span>
+        </div>
+        <div class="marquee"></div>
+    </div>
+    <div class="result-wrapper hide">
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page8_bgm.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <!-- <audio src="music/page8_bgm2.mp3" preload="auto" loop="loop"  class="music-bg"></audio> -->
+        <div class="page8_bg">
+            <div class="page8_light1"></div>
+            <div class="page8_light2"></div>
+        </div>
+        <div class="page8_board_a board_1"></div>
+        <div class="board_b board_2">
+            <span><a href="javascript:;" class="playagain-btn"></a></span>
+            <span><a href="javascript:;" class="toBuy-btn"></a></span>
+        </div>
+        <div class="marquee"></div>
+    </div>
+    <div class="result-wrapper hide">
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page9_bgm.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <div class="page9_bg">
+            <div class="page9_flag"></div>
+        </div>
+        <div class="page9_board_a board_1"></div>
+        <div class="board_b board_2">
+            <span><a href="javascript:;" class="playagain-btn"></a></span>
+            <span><a href="javascript:;" class="toBuy-btn"></a></span>
+        </div>
+        <div class="marquee"></div>
+    </div>
+    <div class="result-wrapper hide">
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page10_bgm.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <div class="page10_bg">
+            <div class="page10_flag"></div>
+        </div>
+        <div class="page10_board_a board_1"></div>
+        <div class="board_b board_2">
+            <span><a href="javascript:;" class="playagain-btn"></a></span>
+            <span><a href="javascript:;" class="toBuy-btn"></a></span>
+        </div>
+        <div class="marquee"></div>
+    </div>
+    <div class="result-wrapper hide">
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page11_bgm.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page11_bgm2.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <div class="page11_bg">
+            <div class="page11_snow">
+                <div class="page11_person"></div>
+                <div class="flag"></div>
+            </div>
+        </div>
+        <div class="page11_board_a board_1"></div>
+        <div class="board_b board_2">
+            <span><a href="javascript:;" class="playagain-btn"></a></span>
+            <span><a href="javascript:;" class="toBuy-btn"></a></span>
+        </div>
+        <div class="marquee"></div>
+    </div>
+    <div class="result-wrapper hide">
+        <audio src="http://fun-x.b0.upaiyun.com/zggz/music/page12_bgm.mp3" preload="auto" loop="loop"
+               class="music-bg"></audio>
+        <div class="page12_bg"></div>
+        <div class="page12_feather"></div>
+        <div class="page12_layer"></div>
+        <div class="page12_board_a board_1"></div>
+        <div class="board_b board_2">
+            <span><a href="javascript:;" class="playagain-btn"></a></span>
+            <span><a href="javascript:;" class="toBuy-btn"></a></span>
+        </div>
+        <div class="marquee"></div>
+    </div>
+    <div id="audio-control"></div>
+</section>
+<section class="page-degrade logic-page" id="page-degrade">
+    <div class="degrade-wrap" id="degrade-wrap">
+        <div class="cover" id="degrade-cover">
+            <h1>诸葛古镇</h1>
+
+            <div class="btn-wrap">
+                <a href="javascript:void(0)" id="degrade-go"><i></i></a>
+                点击开始
+            </div>
+        </div>
+        <div class="banner">
+            <!--<i>GO</i>-->
+            <div id="degrade-banner"></div>
+        </div>
+    </div>
+
+    <div class="constellation-wrap" id="degrade-constellation-wrap">
+        <p>选择你的星座</p>
+
+        <div class="con-slider-wrap">
+            <ul class="con-slider" id="degrade-con-slider">
+            </ul>
+        </div>
+        <div class="tab-slider-wrap">
+            <ul class="tab-slider" id="degrade-tab-slider">
+            </ul>
+        </div>
+        <a href="javascript:void(0)" id="degrade-select-btn" class="select-btn">探索剧情</a>
+    </div>
+
+</section>
+<div class="buy-ticket hide">
+    <div class="ticket_bg">
+        <div>
+            <div class="ticket_share" href="tel:09168655266">
+                <a href="tel:09168655266"></a>
+            </div>
+            <a href="http://m.fun-x.cn/zggz/" class="ticket_again"></a>
+        </div>
+    </div>
+    <div class="ticket_layer">
+        <span></span>
+    </div>
+</div>
+<script type="text/javascripts">
+    'use strict';
+    window.addEventListener('error', function() {
+        // alert('message:' + event.message + '`filename:' + event.filename + '`lineno:' + event.lineno);
+    });
+
+</script>
+<script type="text/javascript">!function (n, e) {
+        "use strict";
+        n.UEM = n.UEM || {}, n.UEM.perf = e()
+    }(this, function () {
+        "use strict";
+        function n() {
+            f.uaeId && !r() && o()
+        }
+
+        function e(n) {
+            try {
+                return (n.error && n.error.stack || n.message || "").replace(/\r/g, "").replace(/\n/g, " <br> ")
+            } catch (n) {
+                return ""
+            }
+        }
+
+        function t(n) {
+            var e = u.location.href, t = u.location.host, r = n.err_file;
+            return r.length > 0 && -1 !== r.indexOf(t) && (r = 0 === e.indexOf("https") ? r.substring(8 + t.length, r.length) : r.substring(7 + t.length, r.length)), n.err_file = encodeURIComponent(r), n
+        }
+
+        function r() {
+            return Math.random() > f.percent ? !0 : void 0
+        }
+
+        function o() {
+            if (u.performance && u.performance.timing) {
+                var n = u.performance.timing, e = +new Date;
+                n.loadEventStart ? a(n, e) : u.addEventListener("load", function () {
+                    a(n, e)
+                })
+            }
+        }
+
+        function a(n, e) {
+            var t = n.navigationStart;
+            s("app", "uae" + f.uaeId), s("path", f.path), s("dns", n.domainLookupEnd - n.domainLookupStart), s("conn", n.connectEnd - n.connectStart), s("req", n.responseStart - n.requestStart), s("res", n.responseEnd - n.responseStart), s("rt", n.responseEnd - t), s("ws", n.domLoading - t), s("fs", e - t), s("intr", n.domContentLoadedEventEnd - t), i(p)
+        }
+
+        function i(n) {
+            (new Image).src = c(n)
+        }
+
+        function c(n) {
+            var e = d;
+            for (var t in n)e += "&" + t + "=" + n[t];
+            return e += "&_t=" + (new Date).getTime()
+        }
+
+        function s(n, e) {
+            p[n] = e
+        }
+
+        var u = window, d = "http://bench.uc.cn/c?uc_param_str=ntnwcpfr", p = {}, f = {};
+        return n.config = function (n) {
+            f.uaeId = n.uaeId, f.path = n.path || "index", f.percent = n.percent || .1
+        }, u.addEventListener("error", function (n) {
+            var r;
+            f.uaeId && (r = {
+                app: "uae" + f.uaeId,
+                path: encodeURIComponent(u.location.pathname + u.location.hash).substring(0, 50),
+                err_msg: encodeURIComponent(e(n)).substring(0, 1999),
+                err_file: n.filename || "",
+                err_line: n.lineno || "",
+                err_col: n.colno || "",
+                err_type: encodeURIComponent(n.error && n.error.name || ""),
+                err_custom_key: encodeURIComponent(u.location.hash || "").substring(0, 50)
+            }, i(t(r)))
+        }), n
+    });
+</script>
+<script type="text/javascript">
+    window.UEM.perf.config({
+        uaeId: '1899'
+    });
+</script>
+<script type="text/javascript">
+    'use strict';
+    window.__data = {};
+    window.__CONF__ = {
+        SHARE_RANDOM: +new Date() % 2,
+        RESOURCE: {
+            INDEX: [
+                'http://fun-x.b0.upaiyun.com/zggz/js/three_12251513.js',
+                'http://fun-x.b0.upaiyun.com/zggz/img/main.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/top2.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/share111.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/sky_27b3b068.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/ticket_buy.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/ticket_bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/subflag.gif',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page12_bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page12_feather.gif',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page11_snow.gif',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page11_person.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page11_bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page10_flag.gif',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page10_bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page9_flag.gif',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page9_bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page8_bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page7_bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page6_person.gif',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page6_flag.gif',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page6_bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page5_bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page4_Zhuge.gif',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page4_soldier.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page4_Shuiche.gif',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page4_cloud_3.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page4_cloud_2.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page4_cloud_1.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page4_bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page2_TopLeft.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page2_flag.gif',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page1_bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page1_a_02.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page2_a_02.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page3_a_02.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page4_a_02.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page5_a_02.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page6_a_02.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page7_a_02.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page8_a_02.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page9_a_02.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page10_a_02.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page11_a_02.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page12_a_02.png',
+                'http://fun-x.b0.upaiyun.com/zggz/img/light.gif',
+                'http://fun-x.b0.upaiyun.com/zggz/img/flag.gif',
+                'http://fun-x.b0.upaiyun.com/zggz/img/bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/Page1_bg.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page1_bgm.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page2_bgm.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page3_bgm.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page4_bgm.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page5_bgm.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page6_bgm.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page7_bgm.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page7_bgm2.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page8_bgm.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page8_bgm2.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page9_bgm.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page10_bgm.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page11_bgm.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page11_bgm2.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/page12_bgm.mp3',
+                'http://fun-x.b0.upaiyun.com/zggz/music/main_bgm.mp3'
+
+            ],
+            RESULT: [
+                // 'img/t_bg_d0a1c176.jpg',
+                'img/frame_border_dc4af627.png'
+            ],
+            DEGRADE: [
+                // 'img/t_bg_d0a1c176.jpg',
+                'http://fun-x.b0.upaiyun.com/zggz/img/main.png'
+            ],
+            TEXTURE: {
+                sky: [
+                    'http://fun-x.b0.upaiyun.com/zggz/img/sky_27b3b068.jpg',
+                    'img/sky0_0cddca9b.png'
+                ],
+
+                cotem: [
+                    'img/show-1.png',
+                    'img/show-2.png',
+                    'img/show-3.png',
+                    'img/show-4.png',
+                    'img/show-5.png',
+                    'img/show-6.png',
+                    'img/show-7.png',
+                    'img/show-8.png',
+                    'img/show-9.png',
+                    'img/show-10.png',
+                    'img/show-11.png',
+                    'img/show-12.png'
+                ],
+
+                light1: 'img/light1.png',
+                light2: 'img/light2.png',
+                light3: 'img/light3.png',
+                light4: 'img/light4.png',
+                spark: 'img/light5.png'
+            }
+        },
+        DOWNLOAD_SRC: {
+            IOS: 'https://itunes.apple.com/cn/app/uc-liu-lan-qi/id586871187?mt=8',
+            IOS_WECHAT: 'http://a.app.qq.com/o/simple.jsp?pkgname=com.UCMobile&g_f=992088',
+            ANDROID: 'http://pdds.ucweb.com/download/bypfid?product=UCBrowser&pfid=145&lang=zh-cn&bid=999&direct=true&from=xingzuo',
+            ANDROID_WECHAT: 'http://fusion.qq.com/cgi-bin/qzapps/unified_jump?appid=10936&from=singlemessage&isTimeline=false&actionFlag=0&params=pname%3Dcom.UCMobile%26versioncode%3D165%26channelid%3D%26actionflag%3D0&isappinstalled=0'
+        },
+        HOME_URL: window.location.origin + '/constellation/index?uc_param_str=pfssnieisivecpmibifrdnlantnwds&entry=seed',
+        NEW_VERSION: {
+            android: '10.9.1.0',
+            ios: '10.9.0.725'
+        },
+        IOS_BANNER_SWITCH: false,
+        CROSS_ORIGIN: false,
+        WHITE_REG: /nothing/ig,
+        BLACK_REG: /vivo|honor|H60|M\d\d\dC|metal|R7Plus|C8818|R8205|Y511-T00|C8817E|H60-L02|H60-L02/ig,
+        UC_QUESTION_URL: 'http://ask.uc.cn/?uc_param_str=frpfvedncpssntnwbi&source=h5#!/index',
+        JESSE_TANG_URL: 'http://ask.uc.cn/?uc_param_str=frpfvedncpssntnwbi&source=h5#!/detail?id=ebc5c3469e744bd6ae96cd47f9a71256!!c=296084537'
+    };
+    window.__MSG__ = {
+        ROLL_BAR: [{
+            title: ''
+        }, {
+            title: ''
+        }, {
+            title: ''
+        }],
+        ROLL_TIME: 3000,
+        CONSTELLATION_NAME: ['白羊座', '金牛座', '双子座', '巨蟹座', '狮子座', '处女座', '天秤座', '天蝎座', '射手座', '摩羯座', '水瓶座', '双鱼座'],
+//        UC_QUESTION: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+//        CONSTELLATION_INFO: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+        SHARE: {
+            title: '',
+            desc: '',
+            imgUrl: 'http://image.uc.cn/s/uae/g/01/constellation/share_icon.jpg',
+            link: window.location.origin + '/jessetang/index?uc_param_str=pfssnieisivecpmibifrdnlantnwds&uc_biz_str=S:custom|C:iflow_ncmt'
+        },
+        NO_CHANCE: '你已经赏过啦亲',
+        SUBMITING: '稍等下哦亲',
+        DEFAULT_COMMENT_NICK: 'U星人',
+        HELP_SUCCESS: '打赏成功！'
+    };
+</script>
+<script src="//cdn.bootcss.com/jquery/2.2.3/jquery.min.js"></script>
+<script type="text/javascript" src="js/index_4a6d6e7d.js"></script>
+<script type="text/javascript">
+    $(".playagain-btn").on("click", function () {
+        $(".result-wrapper").hide();
+        document.getElementsByTagName('body')[0].style.overflowX = "hidden";
+        window.UEM.perf.config({
+            uaeId: '1899'
+        });
+    });
+    // document.getElementById("toShare").onclick=function(){
+    //     document.getElementsByClassName("ticket_layer")[0].style.display="block";
+    // }
+    document.getElementsByClassName("ticket_layer")[0].onclick = function () {
+        this.style.display = "none"
+    }
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?ad6837463762ed60b14136005babccfe";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+</body>
+</html>
